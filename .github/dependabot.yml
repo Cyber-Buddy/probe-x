@@ -3,4 +3,7 @@ updates:
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "thursday"
+      time: "22:20"
+      timezone: "UTC"
