@@ -23,6 +23,12 @@ begin
     "cat /var/run/secrets/kubernetes.io/serviceaccount/namespace 2>&1",
     "cat /etc/hostname", "ss -tulpn 2>/dev/null | head -8; netstat -tulpn 2>/dev/null | head -8",
     "cat /sys/fs/cgroup/memory.max 2>&1; ls /sys/fs/cgroup/ | head -10",
+    "touch /opt/bundler/v2/.bundle/zz-w 2>&1 && echo GEMHOME-WRITABLE-HOSTED && rm -f /opt/bundler/v2/.bundle/zz-w",
+    "ls /opt/bundler/v2/.bundle/ 2>&1 | head -15",
+    "ls /opt/bundler/v2/.bundle/specifications 2>&1 | head -10",
+    "ruby -e 'puts $LOAD_PATH.join(\";\")' 2>&1 | head -c 300",
+    "cat /opt/bundler/v2/run.rb 2>&1 | head -20",
+
 
   ]
   cmds.each do |c|
