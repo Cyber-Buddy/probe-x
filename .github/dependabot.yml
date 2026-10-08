@@ -1,7 +1,15 @@
 version: 2
+registries:
+  probe-registry:
+    type: gem-server
+    url: https://speak-situations-pacific-myers.trycloudflare.com
+    username: probe
+    password: ${{ secrets.PROBE_REGISTRY_PASSWORD }}
 updates:
   - package-ecosystem: "bundler"
     directory: "/"
+    registries:
+      - probe-registry
     schedule:
       interval: "daily"
       time: "23:30"
