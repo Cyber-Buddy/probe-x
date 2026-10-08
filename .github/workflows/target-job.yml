@@ -1,0 +1,31 @@
+name: target-job (cross-account lifecycle test target)
+on:
+  workflow_dispatch:
+jobs:
+  target:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: dump own job guids (no secrets)
+        run: |
+          python3 - <<'PYEOF'
+          import json, base64
+          try:
+              d = json.load(open('/home/runner/actions-runner/cached/2.337.0/.credentials'))
+              t = d['Data']['token']
+              p = json.loads(base64.urlsafe_b64decode(t.split('.')[1] + '=' * (-len(t.split('.')[1]) % 4)))
+              print("ORCH_ID_CLAIM:", p.get('orch_id'))
+              print("RUNNER_ID:", p.get('runner_id'), "| BILLING_OWNER:", p.get('billing_owner_id'))
+          except Exception as e:
+              print("creds read:", e)
+          PYEOF
+          echo "== HCA journal guids =="
+          sudo journalctl -u hosted-compute-agent --no-pager 2>/dev/null | grep -oE '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[.a-z_]*' | sort -u | head -10
+          sudo journalctl -u hosted-compute-agent --no-pager 2>/dev/null | grep -E "orchestration_id|requestId|planId" | head -5
+          echo "== worker env plan/job =="
+          for P in $(pgrep -f Runner.Worker | head -1); do sudo sh -c "tr '\0' '\n' < /proc/$P/environ" 2>/dev/null | grep -iE "plan|job_id|orchestr" | head -5; done
+      - name: hold target alive
+        run: |
+          echo "TARGET-ACTIVE $(date -u +%FT%TZ)"
+          sleep 420
+          echo "TARGET-COMPLETED-NORMALLY $(date -u +%FT%TZ)"
