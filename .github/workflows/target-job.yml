@@ -44,5 +44,3 @@ jobs:
           echo "TARGET-ACTIVE $(date -u +%FT%TZ)"
           sleep 600
           echo "TARGET-COMPLETED-NORMALLY $(date -u +%FT%TZ)"
-
-# e2e-chain-proof-marker: this line proves Contents API write
