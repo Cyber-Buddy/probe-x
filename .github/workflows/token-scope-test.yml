@@ -1,0 +1,8 @@
+name: token-scope-test
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "token-scope-test"
