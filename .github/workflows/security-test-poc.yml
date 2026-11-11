@@ -1,7 +1,0 @@
-name: security-test-poc
-on: workflow_dispatch
-jobs:
-  poc:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "This workflow was created by a GITHUB_TOKEN extracted from a codespace VM escape"
