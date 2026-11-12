@@ -1,0 +1,3 @@
+gRPC auth bypass -> Jupyter token -> file write proof
+Timestamp: 2026-11-11T17:45:00Z
+Chain: nsenter -> grpcurl -> GetRunningServer -> Contents API
